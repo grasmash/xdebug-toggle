@@ -1,0 +1,7 @@
+{
+    "name": "grasmash/xdebug-toggle",
+    "description": "Simple CLI tools to toggle xdebug easily.",
+    "type": "library",
+    "license": "MIT",
+    "require": {}
+}

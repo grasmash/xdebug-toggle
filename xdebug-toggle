@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+
+<?php
+
+$ini_file_location = php_ini_loaded_file();
+$contents = file_get_contents($ini_file_location);
+
+if (preg_match('|;zend_extension=".+\/xdebug.so"|', $contents)) {
+    $xdebug_enabled = FALSE;
+    echo "Enabling xdebug in $ini_file_location...\n";
+    $new_contents = preg_replace('|(;)(zend_extension=".+\/xdebug.so")|', '$2', $contents);
+    file_put_contents($ini_file_location, $new_contents);
+}
+elseif (preg_match('|zend_extension=".+\/xdebug.so"|', $contents)) {
+    $xdebug_enabled = TRUE;
+    echo "Disabling xdebug in $ini_file_location...\n";
+    $new_contents = preg_replace('|(zend_extension=".+\/xdebug.so")|', ';$1', $contents);
+    file_put_contents($ini_file_location, $new_contents);
+}
+else {
+    $xdebug_enabled = NULL;
+    echo "Error: Could not find xdebug zend extension in $ini_file_location";
+}
