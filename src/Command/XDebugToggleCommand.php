@@ -4,17 +4,13 @@ namespace Grasmash\XDebugToggle\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class XDebugToggleCommand extends Command
 {
-    /**
-     * @var
-     */
-    protected $iniFile;
-
     /**
      * @var Filesystem;
      */
@@ -42,6 +38,13 @@ class XDebugToggleCommand extends Command
     {
         $this
           ->setName('toggle')
+          ->addOption(
+            'ini-file',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'The file path to the php.ini file that should be modified',
+            php_ini_loaded_file()
+          )
           ->setDescription('Toggles xDebug, enabling or disabling it as needed.')
           ->setHelp('This command will re-write your active php.ini file by either commenting or uncommenting the Zend extension for xDebug.')
         ;
@@ -58,20 +61,68 @@ class XDebugToggleCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->output = $output;
-        $this->fs = new Filesystem();
-        $this->logger = new ConsoleLogger($output);
-        $this->iniFile = php_ini_loaded_file();
-        $contents = file_get_contents($this->iniFile);
+        $ini_file = $input->getOption('ini-file');
+        $contents = file_get_contents($ini_file);
+        $this->setOutput($output);
+        $this->setFs(new Filesystem());
+        $this->setLogger(new ConsoleLogger($output));
         $this->setXDebugStatus($contents);
 
         if ($this->xDebugEnabled === false) {
-            $this->enableXDebug($contents);
+            $this->enableXDebug($ini_file, $contents);
         } elseif ($this->xDebugEnabled == true) {
-            $this->disableXDebug($contents);
+            $this->disableXDebug($ini_file, $contents);
         } else {
-            $this->logger->error("Could not find xdebug zend extension in $this->iniFile!");
+            $this->logger->error("Could not find xdebug zend extension in $ini_file!");
         }
+    }
+
+    /**
+     * @return \Symfony\Component\Console\Output\OutputInterface
+     */
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     */
+    public function setOutput($output)
+    {
+        $this->output = $output;
+    }
+
+    /**
+     * @return \Symfony\Component\Filesystem\Filesystem
+     */
+    public function getFs()
+    {
+        return $this->fs;
+    }
+
+    /**
+     * @param \Symfony\Component\Filesystem\Filesystem $fs
+     */
+    public function setFs($fs)
+    {
+        $this->fs = $fs;
+    }
+
+    /**
+     * @return \Symfony\Component\Console\Logger\ConsoleLogger
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Logger\ConsoleLogger $logger
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -80,7 +131,7 @@ class XDebugToggleCommand extends Command
      * @param string $contents
      *   The contents of php.ini.
      */
-    protected function setXDebugStatus($contents)
+    public function setXDebugStatus($contents)
     {
         if (preg_match('|;zend_extension=".+\/xdebug.so"|', $contents)) {
             $this->xDebugEnabled = false;
@@ -92,16 +143,27 @@ class XDebugToggleCommand extends Command
     }
 
     /**
+     * Gets $this->xDebugEnabled.
+     *
+     * @return mixed
+     *   $this->xDebugEnabled.
+     */
+    public function getXDebugStatus()
+    {
+        return $this->xDebugEnabled;
+    }
+
+    /**
      * Enables xDebug.
      *
      * @param string $contents
      *   The contents of php.ini.
      */
-    protected function enableXDebug($contents)
+    public function enableXDebug($destination_file, $contents)
     {
-        $this->logger->notice("Enabling xdebug in $this->iniFile...");
+        $this->logger->notice("Enabling xdebug in $destination_file...");
         $new_contents = preg_replace('|(;)(zend_extension=".+\/xdebug.so")|', '$2', $contents);
-        $this->fs->dumpFile($this->iniFile, $new_contents);
+        $this->fs->dumpFile($destination_file, $new_contents);
         $this->output->writeln("<info>xDebug enabled.</info>");
     }
 
@@ -111,11 +173,11 @@ class XDebugToggleCommand extends Command
      * @param string $contents
      *   The contents of php.ini.
      */
-    protected function disableXDebug($contents)
+    public function disableXDebug($destination_file, $contents)
     {
-        $this->logger->notice("Disabling xdebug in $this->iniFile...");
+        $this->logger->notice("Disabling xdebug in $destination_file...");
         $new_contents = preg_replace('|(zend_extension=".+\/xdebug.so")|', ';$1', $contents);
-        $this->fs->dumpFile($this->iniFile, $new_contents);
+        $this->fs->dumpFile($destination_file, $new_contents);
         $this->output->writeln("<info>xDebug disabled.</info>");
     }
 }
