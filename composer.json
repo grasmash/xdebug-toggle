@@ -14,7 +14,7 @@
         }
     },
     "bin": [
-        "bin/xdebug-toggle"
+        "bin/xdebug"
     ],
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.0",
