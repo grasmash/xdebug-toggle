@@ -65,13 +65,11 @@ class XDebugToggleCommand extends Command
         $contents = file_get_contents($this->iniFile);
         $this->setXDebugStatus($contents);
 
-        if ($this->xDebugEnabled === FALSE) {
+        if ($this->xDebugEnabled === false) {
             $this->enableXDebug($contents);
-        }
-        elseif ($this->xDebugEnabled == TRUE) {
+        } elseif ($this->xDebugEnabled == true) {
             $this->disableXDebug($contents);
-        }
-        else {
+        } else {
             $this->logger->error("Could not find xdebug zend extension in $this->iniFile!");
         }
     }
@@ -82,15 +80,14 @@ class XDebugToggleCommand extends Command
      * @param string $contents
      *   The contents of php.ini.
      */
-    protected function setXDebugStatus($contents) {
+    protected function setXDebugStatus($contents)
+    {
         if (preg_match('|;zend_extension=".+\/xdebug.so"|', $contents)) {
-            $this->xDebugEnabled = FALSE;
-        }
-        elseif (preg_match('|zend_extension=".+\/xdebug.so"|', $contents)) {
-            $this->xDebugEnabled = TRUE;
-        }
-        else {
-            $this->xDebugEnabled = NULL;
+            $this->xDebugEnabled = false;
+        } elseif (preg_match('|zend_extension=".+\/xdebug.so"|', $contents)) {
+            $this->xDebugEnabled = true;
+        } else {
+            $this->xDebugEnabled = null;
         }
     }
 
