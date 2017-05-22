@@ -28,7 +28,6 @@ foreach ($commands as $command) {
       ->setHelp('This command will re-write your active php.ini file by either commenting or uncommenting the Zend extension for xDebug.');
 }
 
-
 $application->addCommands($commands);
 $application->setDefaultCommand('toggle');
 $application->run();

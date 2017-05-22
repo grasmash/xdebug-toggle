@@ -102,4 +102,27 @@ class xDebugToggleCommandTest extends TestCase {
         ];
     }
 
+    /**
+     * Tests status command.
+     *
+     * @dataProvider providerTestStatus
+     */
+    public function testStatus($ini_file, $status) {
+        $output = shell_exec(__DIR__ . "/../bin/xdebug status --ini-file=$ini_file -v");
+        $this->assertContains("xDebug is $status.", $output);
+    }
+
+    /**
+     * Data provider for testExecute().
+     *
+     * @return array
+     */
+    public function providerTestStatus()
+    {
+        return [
+          [__DIR__ . '/fixtures/xdebug-disabled.ini', 'disabled'],
+          [__DIR__ . '/fixtures/xdebug-enabled.ini', 'enabled'],
+        ];
+    }
+
 }
