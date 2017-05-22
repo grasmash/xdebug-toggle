@@ -54,7 +54,7 @@ class xDebugToggleCommandTest extends TestCase {
     public function testEnableXDebug() {
         $ini_disabled = file_get_contents(__DIR__ . '/fixtures/xdebug-disabled.ini');
         $tmp_file = __DIR__ . '/../tmp/testEnableXDebug.ini';
-        unlink($tmp_file);
+        $this->command->getFs()->remove($tmp_file);
         $this->command->enableXDebug($tmp_file, $ini_disabled);
         $this->assertFileExists($tmp_file);
         $new_contents = file_get_contents($tmp_file);
@@ -67,7 +67,7 @@ class xDebugToggleCommandTest extends TestCase {
     public function testDisableXDebug() {
         $ini_disabled = file_get_contents(__DIR__ . '/fixtures/xdebug-enabled.ini');
         $tmp_file = __DIR__ . '/../tmp/testDisableXDebug.ini';
-        unlink($tmp_file);
+        $this->command->getFs()->remove($tmp_file);
         $this->command->disableXDebug($tmp_file, $ini_disabled);
         $this->assertFileExists($tmp_file);
         $new_contents = file_get_contents($tmp_file);
@@ -81,7 +81,7 @@ class xDebugToggleCommandTest extends TestCase {
      */
     public function testExecute($ini_file, $prefix) {
         $tmp_file = __DIR__ . '/../tmp/testExecute.ini';
-        unlink($tmp_file);
+        $this->command->getFs()->remove($tmp_file);
         copy($ini_file, $tmp_file);
         $output = shell_exec(__DIR__ . "/../bin/xdebug toggle --ini-file=$tmp_file -v");
         $this->assertContains("$prefix xdebug in $tmp_file...", $output);
