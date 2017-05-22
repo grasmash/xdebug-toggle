@@ -79,11 +79,11 @@ class xDebugToggleCommandTest extends TestCase {
      *
      * @dataProvider providerTestExecute
      */
-    public function testExecute($ini_file, $prefix) {
+    public function testExecute($ini_file, $command, $prefix) {
         $tmp_file = __DIR__ . '/../tmp/testExecute.ini';
         $this->command->getFs()->remove($tmp_file);
         copy($ini_file, $tmp_file);
-        $output = shell_exec(__DIR__ . "/../bin/xdebug toggle --ini-file=$tmp_file -v");
+        $output = shell_exec(__DIR__ . "/../bin/xdebug $command --ini-file=$tmp_file -v");
         $this->assertContains("$prefix xdebug in $tmp_file...", $output);
     }
 
@@ -95,8 +95,10 @@ class xDebugToggleCommandTest extends TestCase {
     public function providerTestExecute()
     {
         return [
-          [__DIR__ . '/fixtures/xdebug-disabled.ini', 'Enabling'],
-          [__DIR__ . '/fixtures/xdebug-enabled.ini', 'Disabling'],
+          [__DIR__ . '/fixtures/xdebug-disabled.ini', 'enable', 'Enabling'],
+          [__DIR__ . '/fixtures/xdebug-disabled.ini', 'toggle', 'Enabling'],
+          [__DIR__ . '/fixtures/xdebug-enabled.ini', 'disable', 'Disabling'],
+          [__DIR__ . '/fixtures/xdebug-enabled.ini', 'toggle', 'Disabling'],
         ];
     }
 
