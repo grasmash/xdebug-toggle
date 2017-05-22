@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php
+require __DIR__.'/../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Grasmash\XDebugToggle\Command\XDebugToggleCommand;
+use Grasmash\XDebugToggle\Command\XDebugEnableCommand;
+use Grasmash\XDebugToggle\Command\XDebugDisableCommand;
+use Grasmash\XDebugToggle\Command\XDebugStatusCommand;
+use Symfony\Component\Console\Input\InputOption;
+
+$application = new Application('xdebug', '1.0.0');
+$commands = [
+  new XDebugToggleCommand(),
+  new XDebugEnableCommand(),
+  new XDebugDisableCommand(),
+  new XDebugStatusCommand(),
+];
+foreach ($commands as $command) {
+    $command->addOption(
+      'ini-file',
+      null,
+      InputOption::VALUE_OPTIONAL,
+      'The file path to the php.ini file that should be modified',
+      php_ini_loaded_file()
+    )
+      ->setDescription('Toggles xDebug, enabling or disabling it as needed.')
+      ->setHelp('This command will re-write your active php.ini file by either commenting or uncommenting the Zend extension for xDebug.');
+}
+
+
+$application->addCommands($commands);
+$application->setDefaultCommand('toggle');
+$application->run();

@@ -2,12 +2,11 @@
 
 namespace Grasmash\XDebugToggle\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
-class XDebugToggleCommand extends BaseCommand
+class XDebugDisableCommand extends BaseCommand
 {
 
     /**
@@ -15,7 +14,7 @@ class XDebugToggleCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName('toggle');
+        $this->setName('disable');
     }
 
     /**
@@ -36,13 +35,6 @@ class XDebugToggleCommand extends BaseCommand
         $ini_file = $input->getOption('ini-file');
         $contents = file_get_contents($ini_file);
         $this->setXDebugStatus($contents);
-
-        if ($this->xDebugEnabled === false) {
-            $this->enableXDebug($ini_file, $contents);
-        } elseif ($this->xDebugEnabled == true) {
-            $this->disableXDebug($ini_file, $contents);
-        } else {
-            $this->logger->error("Could not find xdebug zend extension in $ini_file!");
-        }
+        $this->disableXDebug($ini_file, $contents);
     }
 }

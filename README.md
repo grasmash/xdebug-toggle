@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/grasmash/xdebug-toggle.svg?branch=master)](https://travis-ci.org/grasmash/xdebug-toggle)
+
 # Xdebug Toggle
 
 A PHP-based CLI tool for quickly enabling and/or disabling xdebug.

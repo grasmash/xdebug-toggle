@@ -83,7 +83,7 @@ class xDebugToggleCommandTest extends TestCase {
         $tmp_file = __DIR__ . '/../tmp/testExecute.ini';
         unlink($tmp_file);
         copy($ini_file, $tmp_file);
-        $output = shell_exec(__DIR__ . "/../bin/xdebug-toggle --ini-file=$tmp_file -v");
+        $output = shell_exec(__DIR__ . "/../bin/xdebug toggle --ini-file=$tmp_file -v");
         $this->assertContains("$prefix xdebug in $tmp_file...", $output);
     }
 
