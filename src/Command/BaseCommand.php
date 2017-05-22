@@ -62,33 +62,6 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * Executes the command.
-     *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     *   The CLI input.
-     *
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *   The CLI output.
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $ini_file = $input->getOption('ini-file');
-        $contents = file_get_contents($ini_file);
-        $this->setOutput($output);
-        $this->setFs(new Filesystem());
-        $this->setLogger(new ConsoleLogger($output));
-        $this->setXDebugStatus($contents);
-
-        if ($this->xDebugEnabled === false) {
-            $this->enableXDebug($ini_file, $contents);
-        } elseif ($this->xDebugEnabled == true) {
-            $this->disableXDebug($ini_file, $contents);
-        } else {
-            $this->logger->error("Could not find xdebug zend extension in $ini_file!");
-        }
-    }
-
-    /**
      * @return \Symfony\Component\Console\Output\OutputInterface
      */
     public function getOutput()
