@@ -30,5 +30,5 @@ xdebug status
 You may use `Composer` to install this library. It is suggested that you install it globally and add Composer's global `bin` directory to your system's `$PATH`.
 
 ```
-composer global require grasmash/xdebug-toggle
+composer global require grasmash/xdebug-toggle --update-no-dev
 ```

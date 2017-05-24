@@ -1,6 +1,18 @@
 #!/usr/bin/env php
 <?php
-require __DIR__.'/../vendor/autoload.php';
+
+set_time_limit(0);
+$consoleRoot = __DIR__ . '/../';
+if (file_exists($consoleRoot . 'vendor/autoload.php')) {
+    $autoload = include_once $consoleRoot . 'vendor/autoload.php';
+}
+elseif (file_exists($consoleRoot.'../../autoload.php')) {
+    $autoload = include_once $consoleRoot . '../../autoload.php';
+}
+else {
+    echo 'Unable to autoload classes.' . PHP_EOL;
+    exit(1);
+}
 
 use Symfony\Component\Console\Application;
 use Grasmash\XDebugToggle\Command\XDebugToggleCommand;
