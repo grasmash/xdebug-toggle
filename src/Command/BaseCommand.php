@@ -146,7 +146,7 @@ abstract class BaseCommand extends Command
     public function enableXDebug($destination_file, $contents)
     {
         $this->logger->notice("Enabling xdebug in $destination_file...");
-        $new_contents = preg_replace('|(;)(zend_extension=".+\/xdebug.so")|', '$2', $contents);
+        $new_contents = preg_replace('|(;)+(zend_extension=".+\/xdebug.so")|', '$2', $contents);
         $this->fs->dumpFile($destination_file, $new_contents);
         $this->output->writeln("<info>xDebug enabled.</info>");
     }
@@ -160,7 +160,7 @@ abstract class BaseCommand extends Command
     public function disableXDebug($destination_file, $contents)
     {
         $this->logger->notice("Disabling xdebug in $destination_file...");
-        $new_contents = preg_replace('|(zend_extension=".+\/xdebug.so")|', ';$1', $contents);
+        $new_contents = preg_replace('|(;)*(zend_extension=".+\/xdebug.so")|', ';$2', $contents);
         $this->fs->dumpFile($destination_file, $new_contents);
         $this->output->writeln("<info>xDebug disabled.</info>");
     }
