@@ -109,6 +109,19 @@ abstract class BaseCommand extends Command
         $this->logger = $logger;
     }
 
+    protected function getRegex($prefix = false) {
+        $extensionName = 'php_xdebug-2.7.2-7.2-vc15.dll';
+        $extensionName = getenv('XDEBUG_EXTENSION_FILE_NAME') ?: '"xdebug.so"';
+
+        $regex = "(zend_extension\s?=\s?{$extensionName})";
+
+        if ($prefix) {
+            $regex = "(;)+{$regex}";
+        }
+
+        return "|{$regex}|";
+    }
+
     /**
      * Sets $this->xDebugEnabled.
      *
@@ -117,9 +130,9 @@ abstract class BaseCommand extends Command
      */
     public function setXDebugStatus($contents)
     {
-        if (preg_match('|;zend_extension=".+\/xdebug.so"|', $contents)) {
+        if (preg_match($this->getRegex(true), $contents)) {
             $this->xDebugEnabled = false;
-        } elseif (preg_match('|zend_extension=".+\/xdebug.so"|', $contents)) {
+        } elseif (preg_match($this->getRegex(), $contents)) {
             $this->xDebugEnabled = true;
         } else {
             $this->xDebugEnabled = null;
@@ -146,9 +159,9 @@ abstract class BaseCommand extends Command
     public function enableXDebug($destination_file, $contents)
     {
         $this->logger->notice("Enabling xdebug in $destination_file...");
-        $new_contents = preg_replace('|(;)+(zend_extension=".+\/xdebug.so")|', '$2', $contents);
+        $new_contents = preg_replace($this->getRegex(true), '$2', $contents);
         $this->fs->dumpFile($destination_file, $new_contents);
-        $this->output->writeln("<info>xDebug enabled.</info>");
+        $this->output->writeln("<info>xDebug enabled. (don't forget to restart the server as well!)</info>");
     }
 
     /**
@@ -160,8 +173,8 @@ abstract class BaseCommand extends Command
     public function disableXDebug($destination_file, $contents)
     {
         $this->logger->notice("Disabling xdebug in $destination_file...");
-        $new_contents = preg_replace('|(;)*(zend_extension=".+\/xdebug.so")|', ';$2', $contents);
+        $new_contents = preg_replace($this->getRegex(), ';$1', $contents);
         $this->fs->dumpFile($destination_file, $new_contents);
-        $this->output->writeln("<info>xDebug disabled.</info>");
+        $this->output->writeln("<info>xDebug disabled. (don't forget to restart the server as well!)</info>");
     }
 }

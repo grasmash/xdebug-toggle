@@ -32,3 +32,7 @@ You may use `Composer` to install this library. It is suggested that you install
 ```
 composer global require grasmash/xdebug-toggle --update-no-dev
 ```
+
+### Configuration
+
+If your extension doesn't match the `xdebug.so` name (e.g. you're on Windows), you can set a environment variable to correct file name: `XDEBUG_EXTENSION_FILE_NAME`.
