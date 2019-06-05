@@ -110,8 +110,11 @@ abstract class BaseCommand extends Command
     }
 
     protected function getRegex($prefix = false) {
-        $extensionName = 'php_xdebug-2.7.2-7.2-vc15.dll';
-        $extensionName = getenv('XDEBUG_EXTENSION_FILE_NAME') ?: '"xdebug.so"';
+        $extensionName = getenv('XDEBUG_EXTENSION_FILE_NAME');
+
+        if (empty($extensionName)) {
+            $extensionName = '"xdebug.so"';
+        }
 
         $regex = "(zend_extension\s?=\s?{$extensionName})";
 
