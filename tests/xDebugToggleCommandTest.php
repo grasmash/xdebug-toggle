@@ -37,15 +37,15 @@ class xDebugToggleCommandTest extends TestCase {
     public function testSetXDebugStatus() {
         $ini_disabled = file_get_contents(__DIR__ . '/fixtures/xdebug-disabled.ini');
         $this->command->setXDebugStatus($ini_disabled);
-        $this->assertEquals($this->command->getXDebugStatus(), FALSE);
+        self::assertEquals(FALSE, $this->command->getXDebugStatus());
 
         $ini_enabled = file_get_contents(__DIR__ . '/fixtures/xdebug-enabled.ini');
         $this->command->setXDebugStatus($ini_enabled);
-        $this->assertEquals($this->command->getXDebugStatus(), TRUE);
+        self::assertEquals(TRUE, $this->command->getXDebugStatus());
 
         $ini_missing = file_get_contents(__DIR__ . '/fixtures/xdebug-missing.ini');
         $this->command->setXDebugStatus($ini_missing);
-        $this->assertEquals($this->command->getXDebugStatus(), NULL);
+        self::assertEquals(NULL, $this->command->getXDebugStatus());
     }
 
     /**
