@@ -39,11 +39,11 @@ abstract class BaseCommand extends Command
         $this
           ->setName('toggle')
           ->addOption(
-            'ini-file',
-            null,
-            InputOption::VALUE_OPTIONAL,
-            'The file path to the php.ini file that should be modified',
-            php_ini_loaded_file()
+              'ini-file',
+              null,
+              InputOption::VALUE_OPTIONAL,
+              'The file path to the php.ini file that should be modified',
+              php_ini_loaded_file()
           )
           ->setDescription('Toggles xDebug, enabling or disabling it as needed.')
           ->setHelp('This command will re-write your active php.ini file by either commenting or uncommenting the Zend extension for xDebug.')
@@ -109,11 +109,12 @@ abstract class BaseCommand extends Command
         $this->logger = $logger;
     }
 
-    protected function getRegex($prefix = false) {
+    protected function getRegex($prefix = false)
+    {
         $extensionName = getenv('XDEBUG_EXTENSION_FILE_NAME');
 
         if (empty($extensionName)) {
-            $extensionName = '"xdebug.so"';
+            $extensionName = '"(.+\/)?xdebug.so"';
         }
 
         $regex = "(zend_extension\s?=\s?{$extensionName})";
