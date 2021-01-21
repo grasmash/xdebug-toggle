@@ -114,7 +114,7 @@ abstract class BaseCommand extends Command
         $extensionName = getenv('XDEBUG_EXTENSION_FILE_NAME');
 
         if (empty($extensionName)) {
-            $extensionName = '".+\/xdebug.so"';
+            $extensionName = '"(.+\/)?xdebug.so"';
         }
 
         $regex = "(zend_extension\s?=\s?{$extensionName})";
