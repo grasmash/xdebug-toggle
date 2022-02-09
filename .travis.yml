@@ -27,4 +27,4 @@ script:
   - ./scripts/run-tests.sh
 
 after_success:
-  - ./vendor/bin/coveralls -vvv
+  - ./vendor/bin/php-coveralls -vvv
