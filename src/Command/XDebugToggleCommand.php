@@ -43,6 +43,9 @@ class XDebugToggleCommand extends BaseCommand
             $this->disableXDebug($ini_file, $contents);
         } else {
             $this->logger->error("Could not find xdebug zend extension in $ini_file!");
+            return 1;
         }
+
+        return 0;
     }
 }

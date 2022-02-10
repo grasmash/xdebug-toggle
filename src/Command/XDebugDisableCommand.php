@@ -36,5 +36,7 @@ class XDebugDisableCommand extends BaseCommand
         $contents = file_get_contents($ini_file);
         $this->setXDebugStatus($contents);
         $this->disableXDebug($ini_file, $contents);
+
+        return 0;
     }
 }

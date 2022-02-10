@@ -42,6 +42,9 @@ class XDebugStatusCommand extends BaseCommand
             $output->writeln("<info>xDebug is enabled.</info>");
         } else {
             $output->writeln("<error>xDebug is missing.</error>");
+            return 1;
         }
+
+        return 0;
     }
 }
